@@ -1,38 +1,13 @@
 var React = require('react');
 var PropTypes = require('prop-types');
 var Link = require('react-router-dom').Link;
+var PlayerPreview = require('./PlayerPreview');
 
 // The way to update parent-component state from a child-comppnent state is to
 // pass the child-com. a function which recieves a specific piece of state to update
 // the parent-com. state.
 // This is called a "controlled component", and it decouples the DOM from the state.
 // "A controlled input accepts its current value as a prop, as well as a callback to change that value."
-
-function PlayerPreview (props) {
-  return (
-    <div>
-      <div className='column'>
-        <img
-          className='avatar'
-          src={props.avatar}
-          alt={'Avatar for ' + props.username}
-        />
-        <h2 className='username'>@{props.username}</h2>
-      </div>
-      <button
-        className='reset'
-        onClick={props.onReset.bind(null, props.id)}>
-          Reset
-      </button>
-    </div>
-  )
-}
-
-PlayerPreview.propTypes = {
-  avatar: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  onReset: PropTypes.func.isRequired,
-};
 
 class PlayerInput extends React.Component {
   constructor(props) {
@@ -44,9 +19,11 @@ class PlayerInput extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+// Controlled-input form handler
+// Updates the state's username property
+
   handleChange(event) {
-    // Controlled-input form handler
-    // Updates the state's username property
     var value = event.target.value;
 
     this.setState(function () {
@@ -96,6 +73,11 @@ PlayerInput.defaultProps = {
   label: 'Username',
 }
 
+// Battle is rendered from App.js.
+// Basically, it checks whether a name has been entered into the text form
+// (aka whether PlayerInput one or two are "falsey") and uses the onSubmit
+// function to handle updating the state-props for Battle. (see render func)
+
 class Battle extends React.Component {
   constructor(props) {
     super(props);
@@ -107,7 +89,6 @@ class Battle extends React.Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleReset = this.handleReset.bind(this);
   }
   handleSubmit(id, username) {
     this.setState(function () {
@@ -145,10 +126,13 @@ class Battle extends React.Component {
           {playerOneImage !== null &&
             <PlayerPreview
               avatar={playerOneImage}
-              username={playerOneName}
-              onReset={this.handleReset}
-              id='playerOne'
-            />}
+              username={playerOneName}>
+                <button
+                  className='reset'
+                  onClick={this.handleReset.bind(this, 'playerOne')}>
+                    Reset
+                </button>
+            </PlayerPreview>}
 
           {!playerTwoName &&
             <PlayerInput
@@ -160,10 +144,13 @@ class Battle extends React.Component {
           {playerTwoImage !== null &&
             <PlayerPreview
               avatar={playerTwoImage}
-              username={playerTwoName}
-              onReset={this.handleReset}
-              id='playerTwo'
-            />}
+              username={playerTwoName}>
+                <button
+                  className='reset'
+                  onClick={this.handleReset.bind(this, 'playerTwo')}>
+                    Reset
+                </button>
+            </PlayerPreview>}
         </div>
 
         {playerOneImage && playerTwoImage &&

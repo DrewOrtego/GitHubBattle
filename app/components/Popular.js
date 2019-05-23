@@ -1,6 +1,7 @@
 var React = require('react');
 var PropTypes = require('prop-types');
 var api = require('../utils/api');
+var Loading = require('./Loading');
 
 function Header (props) {
     // Stateless Functional Component which returns the list of languages and color-codes the selected language
@@ -92,7 +93,7 @@ class Popular extends React.Component {
             <Header
               selectedLanguage={this.state.selectedLanguage}
               onSelect={this.updateSelectedLanguage} />
-              {! this.state.repos ? <p>LOADING...</p> : <RepoGrid repos={this.state.repos} /> }
+              {! this.state.repos ? <Loading /> : <RepoGrid repos={this.state.repos} /> }
           </div>
         )
     }
